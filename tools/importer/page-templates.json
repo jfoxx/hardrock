@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "projectType": "da"
+  },
+  "templates": [
+    {
+      "name": "daytona-beach",
+      "urls": [
+        "https://hotel.hardrock.com/daytona-beach/"
+      ],
+      "representativeUrl": "https://hotel.hardrock.com/daytona-beach/",
+      "description": "Hard Rock Hotel Daytona Beach homepage: hero carousel + booking bar, two-column intro, rooms feature split, alternating promo splits, resort two-card grid, events cards, email signup band, and utility nav strip.",
+      "urlPattern": "/*",
+      "blocks": [
+        {
+          "name": "carousel-hero",
+          "instances": [
+            "#vizADAHeroCarousel2Widget1442910"
+          ]
+        },
+        {
+          "name": "widget",
+          "instances": [
+            "#pageid123997 > header.container-fluid > div.row > ft-booking-bar",
+            "#vizADAEmail1Widget968231"
+          ]
+        },
+        {
+          "name": "columns-intro",
+          "instances": [
+            "#pageIntro .container > .row"
+          ]
+        },
+        {
+          "name": "cards-rooms",
+          "instances": [
+            "#custom1 .row-eq-height"
+          ]
+        },
+        {
+          "name": "columns-promo",
+          "instances": [
+            "#hardrockSplitWidget968226"
+          ]
+        },
+        {
+          "name": "cards-explore",
+          "instances": [
+            "#hardrockCtaCarouselWidget969132"
+          ]
+        },
+        {
+          "name": "cards-event",
+          "instances": [
+            "#hardRockCalendarEmbedWidget968462"
+          ]
+        },
+        {
+          "name": "columns-navbar",
+          "instances": [
+            "#custom7 .footerRow1"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc1",
+          "name": "Hero carousel + booking bar",
+          "selector": "#pageid123997 > header.container-fluid",
+          "style": null,
+          "blocks": [
+            "carousel-hero",
+            "widget"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc2",
+          "name": "Page intro (two columns)",
+          "selector": "#pageIntro",
+          "style": null,
+          "blocks": [
+            "columns-intro"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc3",
+          "name": "Rooms & Suites feature",
+          "selector": "#custom1",
+          "style": "shaded",
+          "blocks": [
+            "cards-rooms"
+          ],
+          "defaultContent": [
+            "#custom1 .ctaCarouselHeading"
+          ]
+        },
+        {
+          "id": "rc4",
+          "name": "Promotional splits",
+          "selector": "#custom2",
+          "style": "light",
+          "blocks": [
+            "columns-promo"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc5",
+          "name": "Explore the resort",
+          "selector": "#custom3",
+          "style": "shaded",
+          "blocks": [
+            "cards-explore"
+          ],
+          "defaultContent": [
+            "#custom3 .ctaCarouselHeading"
+          ]
+        },
+        {
+          "id": "rc6",
+          "name": "Events that rock",
+          "selector": "#custom4",
+          "style": null,
+          "blocks": [
+            "cards-event"
+          ],
+          "defaultContent": [
+            "#custom4 .calEmbedHeading"
+          ]
+        },
+        {
+          "id": "rc7",
+          "name": "Email signup band",
+          "selector": "#custom5",
+          "style": "accent",
+          "blocks": [
+            "widget"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc8",
+          "name": "Utility nav strip",
+          "selector": "#custom7",
+          "style": null,
+          "blocks": [
+            "columns-navbar"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

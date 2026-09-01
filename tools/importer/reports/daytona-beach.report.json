@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://hotel.hardrock.com/daytona-beach/",
+  "path": "daytona-beach",
+  "timestamp": "2026-08-31T20:20:11.210Z",
+  "title": "Hard Rock Hotel Daytona Beach | Daytona Beach Resorts",
+  "template": "daytona-beach",
+  "blocks": [
+    "carousel-hero",
+    "columns-intro",
+    "columns-intro",
+    "columns-feature",
+    "cards-promo",
+    "cards-feature",
+    "cards-event"
+  ]
+}

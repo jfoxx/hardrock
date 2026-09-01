@@ -1,0 +1,39 @@
+{
+  "variantName": "carousel",
+  "baseBlock": "carousel",
+  "variantModifiers": ["hero"],
+  "version": "1.0.0",
+  "created": "2026-08-31T19:49:04.484Z",
+  "sourceContext": {
+    "originUrl": "https://hotel.hardrock.com/daytona-beach/",
+    "originPage": "homepage hero carousel",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + subheading + CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "notes": "Base carousel block. Use the 'hero' modifier (carousel (hero)) for full-width hero slideshows with a dark caption overlay. Omit the modifier for a plain content carousel.",
+    "suitableFor": [
+      "homepage hero banners",
+      "full-width promotional slide shows",
+      "landing page top banners",
+      "inline content carousels"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/daytona-beach/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31T19:49:04.484Z"
+  }
+}

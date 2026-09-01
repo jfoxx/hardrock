@@ -1,27 +1,117 @@
+/* Cards — Hard Rock Daytona Beach
+   Default: stacked cards (photo on top, then heading, copy, purple CTA) laid
+   out in a responsive grid. Values from source "Explore The Resort" cards. */
+
 .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 30px;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
+  display: flex;
+  flex-direction: column;
   background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
+  box-shadow: rgb(0 0 0 / 20%) 2px 1px 10px 0;
 }
 
 .cards .cards-card-image {
   line-height: 0;
 }
 
-.cards > ul > li img {
+.cards .cards-card-image img {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+}
+
+.cards .cards-card-body {
+  margin: 0;
+  padding: 30px 25px;
+}
+
+.cards .cards-card-body h3 {
+  margin: 0 0 10px;
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-size: 21.6px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cards .cards-card-body p {
+  margin: 0;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.4;
+}
+
+.cards .cards-card-body p.button-container {
+  margin: 20px 0 5px;
+}
+
+@media (width >= 900px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Feature variant: cards (feature)
+   A single feature card with the image and text SIDE BY SIDE (image one side,
+   body the other), used for "Rooms & Suites". White card on a shaded section.
+   --------------------------------------------------------------------------- */
+
+.cards.feature > ul {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.cards.feature > ul > li {
+  flex-direction: column;
+}
+
+.cards.feature .cards-card-image img {
+  aspect-ratio: 16 / 9;
+}
+
+.cards.feature .cards-card-body {
+  padding: 30px 24px;
+}
+
+@media (width >= 900px) {
+  .cards.feature > ul {
+    grid-template-columns: 1fr;
+  }
+
+  .cards.feature > ul > li {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* text body on the left (~42%), photo on the right (~58%) — matches source */
+  .cards.feature .cards-card-body {
+    order: 0;
+    flex: 0 0 41.7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+  }
+
+  .cards.feature .cards-card-image {
+    order: 1;
+    flex: 0 0 58.3%;
+  }
+
+  .cards.feature .cards-card-image img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
 }

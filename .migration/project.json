@@ -1,0 +1,12 @@
+{
+  "type": "da",
+  "sites": {
+    "hardrock": {
+      "previewOrg": "jfoxx",
+      "previewSite": "hardrock",
+      "contentHostUrl": "https://content.da.live/jfoxx/hardrock/",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+    }
+  },
+  "pluginRoot": "/home/node/.excat-marketplaces/excat-marketplace/excat"
+}

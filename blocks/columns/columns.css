@@ -31,3 +31,161 @@
     order: unset;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Page intro (plain .columns with a leading <h1>)
+   Two balanced text columns on white: left = large stacked title with a
+   Palmaton script eyebrow word; right = uppercase eyebrow subheading + body
+   copy. Left ~1/3, right ~2/3, top-aligned, ~30px gutter. Scoped by :has(h1)
+   so the promotional splits (which use <h2>) are unaffected.
+   Source: #pageIntro on hotel.hardrock.com/daytona-beach/
+   --------------------------------------------------------------------------- */
+
+.columns:has(h1) h1 {
+  margin: 0 0 30px;
+  color: var(--heading-color);
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/* Palmaton script eyebrow word sits on its own line above the title. */
+.columns:has(h1) h1 em {
+  display: block;
+  margin: 0 0 -17px;
+  font-size: 1.56em;
+  line-height: 1.2;
+}
+
+/* Right column body copy. */
+.columns:has(h1) > div > div:last-child > p {
+  margin: 0 0 10px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.8;
+}
+
+/* Right column eyebrow subheading (first paragraph). */
+.columns:has(h1) > div > div:last-child > p:first-child {
+  margin: 10px 0;
+  color: var(--heading-color);
+  font-size: 14.4px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+@media (width >= 900px) {
+  .columns:has(h1) > div {
+    align-items: flex-start;
+    gap: 30px;
+  }
+
+  /* left column ~1/3 (stacked title) */
+  .columns:has(h1) > div > div:first-child {
+    flex: 1;
+  }
+
+  /* right column ~2/3 (subheading + copy) */
+  .columns:has(h1) > div > div:last-child {
+    flex: 2;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Promotional splits (plain .columns, one row per promo, leading <h2>)
+   Alternating full-width image + text rows: image one side, text the other
+   with an uppercase heading (Palmaton accent word), body copy, and a purple
+   CTA button. Image side alternates per row via :nth-child.
+   Source: #custom2 (#hardrockSplitWidget968226) on the Daytona Beach homepage.
+   --------------------------------------------------------------------------- */
+
+.columns:has(h2) > div {
+  gap: 0;
+}
+
+.columns:has(h2) > div > div {
+  padding: 0;
+}
+
+/* stylelint-disable no-descending-specificity */
+.columns:has(h2) .columns-img-col img,
+.columns:has(h2) picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* stylelint-enable no-descending-specificity */
+
+/* Text column: eyebrow + uppercase heading, body copy, purple CTA. */
+.columns:has(h2) h2 {
+  margin: 0 0 10px;
+  color: var(--heading-color);
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.columns:has(h2) h2 em {
+  display: block;
+  margin: 0 0 -6px;
+  font-size: 2em;
+  line-height: 1;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.columns:has(h2) p {
+  margin: 0 0 10px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.8;
+}
+
+.columns:has(h2) a:any-link {
+  display: inline-block;
+  margin: 20px 0 0;
+  border: 2px solid var(--brand-purple);
+  border-radius: 0;
+  padding: 10px 30px;
+  background-color: var(--brand-purple);
+  color: #fff;
+  font-size: var(--body-font-size-s);
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.columns:has(h2) a:hover,
+.columns:has(h2) a:focus-visible {
+  background-color: #fff;
+  color: var(--brand-purple);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .columns:has(h2) > div {
+    align-items: stretch;
+  }
+
+  /* text column padding */
+  .columns:has(h2) > div > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 45px;
+  }
+
+  /* image column: no padding, flush */
+  .columns:has(h2) > div > .columns-img-col {
+    padding: 0;
+  }
+
+  /* Alternate the image side per promo row: odd rows image-left (default),
+     even rows image-right. */
+  .columns:has(h2) > div:nth-child(even) > .columns-img-col {
+    order: 1;
+  }
+}

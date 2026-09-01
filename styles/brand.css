@@ -1,0 +1,44 @@
+/*
+ * brand.css — Hard Rock Hotel Daytona Beach design tokens
+ * Extracted from https://hotel.hardrock.com/daytona-beach/
+ */
+
+/* Decorative script font used for the emphasized (em) words in headings. */
+@font-face {
+  font-family: Palmaton;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/palmaton.otf') format('opentype');
+}
+
+:root {
+  /* fonts */
+  --heading-font-family: lato, 'Helvetica Neue', arial, sans-serif;
+  --body-font-family: lato, 'Helvetica Neue', arial, sans-serif;
+  --decorative-font-family: palmaton, 'Brush Script MT', cursive;
+
+  /* colors */
+  --background-color: #fff;
+  --text-color: #333;
+  --heading-color: #000;
+  --link-color: #59568f;
+  --link-hover-color: #23527c;
+  --brand-purple: #59568f;
+  --shaded-color: #ececec;
+  --accent-color: #ececec;
+  --hero-overlay-color: rgb(19 19 19 / 75%);
+
+  /* spacing */
+  --section-padding: 40px;
+  --content-max-width: 1170px;
+  --nav-height: 64px;
+
+  /* heading sizes (desktop) */
+  --heading-size-xxl: 44.8px;
+  --heading-size-xl: 40px;
+  --heading-size-l: 26.4px;
+  --heading-size-m: 20px;
+  --heading-size-s: 18px;
+  --heading-size-xs: 16px;
+}

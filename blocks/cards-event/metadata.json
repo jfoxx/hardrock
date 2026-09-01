@@ -1,0 +1,40 @@
+{
+  "variantName": "cards-event",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-08-31T19:49:04.484Z",
+  "sourceContext": {
+    "originUrl": "https://hotel.hardrock.com/daytona-beach/",
+    "originPage": "Events That Rock event listing cards",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "compact",
+    "purpose": "event",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + title + datetime + CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "event listing cards",
+      "date/time driven card rows",
+      "calendar highlights"
+    ],
+    "notSuitableFor": [
+      "promotional splits",
+      "text-only cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/daytona-beach/index"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-08-31T19:49:04.484Z"
+  }
+}
