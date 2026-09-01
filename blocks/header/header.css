@@ -1,25 +1,55 @@
 /* Header — Hard Rock Hotel Daytona Beach
-   Source: fixed transparent bar over hero (white uppercase Lato nav, gold Book
-   Now CTA, hover dropdowns on a dark panel). Migrated uses a solid dark bar so
-   nav text stays legible on any page. Mobile-first. */
+   Two tiers that float over the hero:
+     • pre-header utility bar (Sign In + Book Now) pinned to the very top
+     • main row (brand + nav links) below it
+   At the top of the page the header is transparent with a gradient that fades
+   down over the hero. Once the page scrolls it becomes a translucent dark-gray
+   bar with a hard bottom line. Mobile-first. */
+
+/* stylelint-disable no-descending-specificity */
+
+/* header no longer reserves flow space — the nav floats over the first section */
+header { height: 0; }
 
 header .nav-wrapper {
-  background-color: #131313;
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto;
   z-index: 20;
+  background: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
 }
 
+/* gradient overlay while at the top of the page */
+header .nav-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(0 0 0 / 80%) 0%, rgb(0 0 0 / 35%) 55%, transparent 100%);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* scrolled: gradient off, translucent dark-gray bar with a hard bottom edge */
+header .nav-wrapper.is-scrolled {
+  background: rgb(38 38 38 / 58%);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgb(255 255 255 / 18%);
+}
+
+header .nav-wrapper.is-scrolled::before { opacity: 0; }
+
+/* mobile menu open: solid backdrop so links stay legible over any hero */
+header .nav-wrapper:has(nav[aria-expanded='true']) {
+  background: #131313;
+  border-bottom: 0;
+}
+
+header .nav-wrapper:has(nav[aria-expanded='true'])::before { opacity: 0; }
+
 header nav {
-  display: grid;
-  grid-template:
-    'hamburger brand tools' var(--nav-height)
-    'sections sections sections' 1fr / auto 1fr auto;
-  align-items: center;
-  gap: 0 16px;
-  max-width: 1200px;
-  margin: auto;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
   font-family: var(--body-font-family);
 }
 
@@ -28,12 +58,119 @@ header nav[aria-expanded='true'] {
   overflow-y: auto;
 }
 
+/* ===== Pre-header (utility) bar ===== */
+header .nav-utility {
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  background-color: #2b2b2b;
+}
+
+header .nav-utility-inner {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 16px;
+}
+
+/* Authored utility row: corporate links | Welcome, Sign In | best-rate badge | Book Now */
+header .nav-utility-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  flex: 1;
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+header .nav-utility-content p { margin: 0; }
+
+/* mobile: keep only Welcome/Sign In + Book Now so the bar fits narrow screens */
+header .nav-utility-content > p:first-child,
+header .nav-utility-content > p:has(img) { display: none; }
+
+/* compact brand — surfaces in the utility bar only once scrolled (desktop) */
+header nav .nav-brand-compact {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+header nav .nav-brand-compact p { margin: 0; }
+
+header nav .nav-brand-compact img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+header nav .nav-brand-compact p:last-child {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+header .nav-utility-content a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+header .nav-utility-content a:hover { color: #b8b8b8; }
+
+/* best-rate badge */
+header .nav-utility-content p:has(img) { line-height: 0; }
+
+header .nav-utility-content img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
+/* Book Now (last cell) rendered as the gold CTA button */
+header .nav-utility-content p:last-child a {
+  display: inline-block;
+  padding: 7px 18px;
+  border: 2px solid #9e6c1b;
+  background-color: #9e6c1b;
+  color: #fff;
+  font-weight: 400;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+header .nav-utility-content p:last-child a:hover {
+  background-color: transparent;
+  color: #fff;
+}
+
+/* ===== Main row ===== */
+header .nav-main-inner {
+  display: grid;
+  grid-template:
+    'hamburger brand' var(--nav-height)
+    'sections sections' auto / auto 1fr;
+  align-items: center;
+  gap: 0 16px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 16px;
+}
+
 /* hamburger */
 header nav .nav-hamburger {
   grid-area: hamburger;
   display: flex;
   align-items: center;
-  padding-left: 16px;
 }
 
 header nav .nav-hamburger button {
@@ -86,25 +223,28 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 header nav .nav-brand {
   grid-area: brand;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
 }
 
 header nav .nav-brand p { margin: 0; }
 
 header nav .nav-brand img {
-  height: 48px;
+  height: 72px;
   width: auto;
   display: block;
 }
 
+/* "DAYTONA BEACH" — smaller, centered under the logo */
 header nav .nav-brand p:last-child {
   color: #fff;
   font-family: var(--heading-font-family);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  text-align: center;
 }
 
 /* sections (nav links) — hidden on mobile until hamburger opens */
@@ -122,8 +262,10 @@ header nav .nav-sections ul {
 }
 
 header nav .nav-sections > ul > li {
-  padding: 12px 16px;
+  padding: 12px 0;
   border-top: 1px solid rgb(255 255 255 / 15%);
+
+  p { margin: 0; }
 }
 
 header nav .nav-sections a {
@@ -144,7 +286,7 @@ header nav .nav-sections li.nav-drop { position: relative; }
 header nav .nav-sections li.nav-drop > .nav-drop-toggle {
   position: absolute;
   top: 6px;
-  right: 16px;
+  right: 0;
   width: 40px;
   height: 40px;
   margin: 0;
@@ -188,47 +330,25 @@ header nav .nav-sections li.nav-drop[aria-expanded='true'] > ul { display: block
 header nav .nav-sections li.nav-drop > ul li { padding: 6px 0; }
 header nav .nav-sections li.nav-drop > ul a { font-size: 15px; }
 
-/* tools (Book Now CTA) */
-/* stylelint-disable no-descending-specificity */
-header nav .nav-tools {
-  grid-area: tools;
-  display: flex;
-  align-items: center;
-  padding-right: 16px;
-}
-
-header nav .nav-tools p { margin: 0; }
-
-header nav .nav-tools a {
-  display: inline-block;
-  padding: 9px 20px;
-  border: 2px solid #9e6c1b;
-  background-color: #9e6c1b;
-  color: #fff;
-  font-family: var(--body-font-family);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-header nav .nav-tools a:hover {
-  background-color: transparent;
-  color: #9e6c1b;
-}
-/* stylelint-enable no-descending-specificity */
-
 /* ===== Desktop ===== */
 @media (width >= 900px) {
-  header nav {
+  header .nav-utility-inner { padding: 0 24px; }
+
+  /* restore the full utility row: corporate links left, everything else right */
+  header .nav-utility-content { justify-content: flex-start; }
+
+  header .nav-utility-content > p:first-child {
+    display: block;
+    margin-right: auto;
+  }
+
+  header .nav-utility-content > p:has(img) { display: block; }
+
+  header .nav-main-inner {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     gap: 24px;
-    padding: 0 24px;
+    padding: 8px 24px;
   }
 
   header nav .nav-hamburger { display: none; }
@@ -248,34 +368,11 @@ header nav .nav-tools a:hover {
     border-top: 0;
   }
 
+  header nav .nav-sections > ul > li a { font-size: 14px; }
+
+  /* desktop: no caret indicator on dropdown parents (hover reveals the menu) */
   header nav .nav-sections li.nav-drop > .nav-drop-toggle {
-    position: relative;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-
-  /* desktop: chevron caret instead of +/- */
-  header nav .nav-sections li.nav-drop > .nav-drop-toggle::before {
     display: none;
-  }
-
-  header nav .nav-sections li.nav-drop > .nav-drop-toggle::after {
-    top: 40%;
-    width: 6px;
-    height: 6px;
-    background: transparent;
-    border: 2px solid #fff;
-    border-top: 0;
-    border-left: 0;
-    transform: translate(-50%, -50%) rotate(45deg);
-    transition: transform 0.2s ease;
-  }
-
-  header nav .nav-sections li.nav-drop[aria-expanded='true'] > .nav-drop-toggle::after {
-    transform: translate(-50%, -50%) rotate(-135deg);
   }
 
   /* desktop hover dropdown panel — dark, absolutely positioned */
@@ -296,7 +393,7 @@ header nav .nav-tools a:hover {
   header nav .nav-sections li.nav-drop > ul a {
     display: block;
     padding: 6px 20px;
-    font-size: 15px;
+    font-size: 14px;
     white-space: nowrap;
   }
 
@@ -310,4 +407,31 @@ header nav .nav-tools a:hover {
     top: 0;
     left: 100%;
   }
+
+  /* ===== Scrolled: brand hops into the utility bar, main row slims to links ===== */
+  header .nav-wrapper.is-scrolled .nav-utility-content > p:first-child { display: none; }
+
+  /* corporate links were the right-pusher; with them gone, re-anchor to the right */
+  header .nav-wrapper.is-scrolled .nav-utility-content { justify-content: flex-end; }
+
+  header .nav-wrapper.is-scrolled .nav-brand-compact { display: flex; }
+
+  header .nav-wrapper.is-scrolled .nav-main .nav-brand { display: none; }
+
+  header .nav-wrapper.is-scrolled .nav-main-inner {
+    justify-content: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 }
+
+/* ===== Page offset ===== */
+
+/* A first section that carries a hero-variant block (hero, carousel hero) is
+   full-bleed with a bottom-aligned caption, so it sits under the floating
+   header. Every other opening section gets pushed clear of it. */
+main > .section:first-of-type:not(:has(.hero)) {
+  padding-top: calc(var(--nav-height) + 48px);
+}
+
+/* stylelint-enable no-descending-specificity */

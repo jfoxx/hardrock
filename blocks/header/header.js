@@ -1,20 +1,47 @@
+import { getMetadata } from '../../scripts/aem.js';
+
 // media query match that indicates desktop width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 /**
- * Fetch the nav fragment. Metadata-independent dual-fetch:
- * /content/nav.plain.html (localhost / aem up) then /nav.plain.html (DA/EDS prod).
+ * Build the ordered list of header paths to try.
+ * The `nav` metadata points at the section's nav folder (e.g. /daytona-beach/nav);
+ * the header doc lives inside it at <folder>/header. Falls back to the site-root
+ * /nav when the metadata is absent. Each candidate carries the base its relative
+ * image srcs should resolve against, and every candidate is tried under /content
+ * first (localhost / aem up) then at the real path (DA/EDS prod).
+ */
+function headerCandidates() {
+  const navMeta = getMetadata('nav');
+  let path = '/nav';
+  if (navMeta) {
+    const folder = new URL(navMeta, window.location).pathname.replace(/\/+$/, '');
+    path = `${folder}/header`;
+  }
+  return [
+    { url: `/content${path}.plain.html`, base: `/content${path.replace(/[^/]+$/, '')}` },
+    { url: `${path}.plain.html`, base: path.replace(/[^/]+$/, '') },
+  ];
+}
+
+/**
+ * Fetch the header fragment for the current section.
  * Resolves relative image srcs against the base the fragment was served from,
  * so they don't resolve against the current page URL.
  */
 async function fetchNav() {
-  let base = '/content/';
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) {
-    base = '/';
-    resp = await fetch('/nav.plain.html');
+  let base = '/';
+  let resp;
+  const candidates = headerCandidates();
+  for (let i = 0; i < candidates.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    resp = await fetch(candidates[i].url);
+    if (resp.ok) {
+      base = candidates[i].base;
+      break;
+    }
   }
-  if (!resp.ok) return null;
+  if (!resp || !resp.ok) return null;
   const html = await resp.text();
   const tmp = document.createElement('div');
   tmp.innerHTML = html;
@@ -97,23 +124,59 @@ export default async function decorate(block) {
   const fragment = await fetchNav();
   block.textContent = '';
 
+  // The fragment yields three blocks in order:
+  //   brand, sections (links), utility (corporate links + Sign In + badge + Book Now).
+  const parts = fragment ? [...fragment.children] : [];
+  const brand = parts[0];
+  const sections = parts[1];
+  const utilityContent = parts[2];
+  if (brand) brand.classList.add('nav-brand');
+  if (sections) sections.classList.add('nav-sections');
+  if (utilityContent) utilityContent.classList.add('nav-utility-content');
+
   const nav = document.createElement('nav');
   nav.id = 'nav';
   nav.setAttribute('aria-expanded', 'false');
-  if (fragment) {
-    while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
-  }
 
-  // label the three sections: brand, sections (links), tools (CTA)
-  ['brand', 'sections', 'tools'].forEach((c, i) => {
-    const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
-  });
+  // ── Pre-header (utility) bar, pinned to the very top ──
+  const utility = document.createElement('div');
+  utility.className = 'nav-utility';
+  const utilityInner = document.createElement('div');
+  utilityInner.className = 'nav-utility-inner';
+  // A compact copy of the brand that surfaces in the utility bar once the page
+  // scrolls (the tall stacked logo in the main row hides at the same time).
+  if (brand) {
+    const compactBrand = brand.cloneNode(true);
+    compactBrand.classList.remove('nav-brand');
+    compactBrand.classList.add('nav-brand-compact');
+    compactBrand.removeAttribute('id');
+    utilityInner.append(compactBrand);
+  }
+  if (utilityContent) utilityInner.append(utilityContent);
+  utility.append(utilityInner);
+
+  // ── Main row: hamburger + brand + section links, floats over the hero ──
+  const main = document.createElement('div');
+  main.className = 'nav-main';
+  const mainInner = document.createElement('div');
+  mainInner.className = 'nav-main-inner';
+
+  const hamburger = document.createElement('div');
+  hamburger.className = 'nav-hamburger';
+  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+      <span class="nav-hamburger-icon"></span>
+    </button>`;
+  hamburger.addEventListener('click', () => toggleMenu(nav));
+  mainInner.append(hamburger);
+  if (brand) mainInner.append(brand);
+  if (sections) mainInner.append(sections);
+  main.append(mainInner);
+
+  nav.append(utility, main);
 
   // mark dropdown parents and wire behavior
-  const navSections = nav.querySelector('.nav-sections');
-  if (navSections) {
-    navSections.querySelectorAll('li').forEach((li) => {
+  if (sections) {
+    sections.querySelectorAll('li').forEach((li) => {
       if (li.querySelector(':scope > ul')) {
         li.classList.add('nav-drop');
         li.setAttribute('aria-expanded', 'false');
@@ -121,15 +184,6 @@ export default async function decorate(block) {
       }
     });
   }
-
-  // hamburger for mobile
-  const hamburger = document.createElement('div');
-  hamburger.className = 'nav-hamburger';
-  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-      <span class="nav-hamburger-icon"></span>
-    </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav));
-  nav.prepend(hamburger);
 
   // close open dropdowns when clicking outside
   document.addEventListener('click', (e) => {
@@ -143,4 +197,12 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // At the top of the page the header is transparent over the hero (gradient
+  // fade); once scrolled it gains a translucent dark-gray bar with a hard edge.
+  const onScroll = () => {
+    navWrapper.classList.toggle('is-scrolled', window.scrollY > 10);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 }

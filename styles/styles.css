@@ -111,7 +111,7 @@ h3 em,
 h4 em,
 h5 em,
 h6 em {
-  display: inline-block;
+  display: block;
   font-family: var(--decorative-font-family);
   font-weight: 400;
   font-style: normal;
@@ -351,9 +351,8 @@ main .section.accent {
   padding: 40px 0;
 }
 
-/* Centered decorative section headings (e.g. "Rooms & Suites",
-   "Explore The Resort") that lead a shaded section as default content. */
-main .section.shaded > .default-content-wrapper,
-main .section.accent > .default-content-wrapper {
+/* Center a section's default content only when authored to (section metadata
+   Align: center → data-align="center"), not implicitly from a style class. */
+main .section[data-align="center"] > .default-content-wrapper {
   text-align: center;
 }
