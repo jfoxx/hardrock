@@ -1,7 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 
 // media query match that indicates desktop width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 1100px)');
 
 /**
  * Build the ordered list of header paths to try.
