@@ -21,6 +21,9 @@
   --link-color: #59568f;
   --link-hover-color: #23527c;
 
+  /*hard rock specific colors */
+  --brand-purple: #59568f;
+
   /* fonts (families defined in brand.css) */
 
   /* body sizes */
@@ -355,4 +358,13 @@ main .section.accent {
    Align: center → data-align="center"), not implicitly from a style class. */
 main .section[data-align="center"] > .default-content-wrapper {
   text-align: center;
+}
+
+main .section.dark {
+  background-color: var(--dark-color);
+  color: var(--light-color);
+}
+
+main .section[data-background='purple'] {
+  background-color: var(--brand-purple);
 }
