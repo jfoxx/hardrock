@@ -92,7 +92,6 @@ h5,
 h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
-  color: var(--heading-color);
   font-family: var(--heading-font-family);
   font-weight: 700;
   line-height: 1.1;
@@ -364,6 +363,7 @@ main .section[data-align="center"] > .default-content-wrapper {
 main .section.dark {
   background-color: var(--dark-color);
   color: var(--light-color);
+  --text-color: var(--light-color);
 }
 
 main .section[data-background='purple'] {
