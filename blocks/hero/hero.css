@@ -33,5 +33,11 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+
+    &.max {
+      height: 70vh;
+    }
   }
+
+
 }
