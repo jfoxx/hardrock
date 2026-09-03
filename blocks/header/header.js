@@ -116,6 +116,36 @@ function wireDropdown(li, nav) {
   });
 }
 
+/** Last path segment, without a trailing slash or .aspx/.html extension, lowercased. */
+function slugFromPath(pathname) {
+  const last = pathname.replace(/\/+$/, '').split('/').pop() || '';
+  return last.replace(/\.(aspx|html)$/i, '').toLowerCase();
+}
+
+/**
+ * Mark the nav link matching the current page as active (mirrors the hover state).
+ * Nav hrefs are the source .aspx URLs, so match on the page slug, not the full path.
+ */
+function markActiveNav(nav) {
+  const currentSlug = slugFromPath(window.location.pathname);
+  if (!currentSlug) return;
+  nav.querySelectorAll('.nav-sections a[href]').forEach((a) => {
+    let linkSlug = '';
+    try {
+      linkSlug = slugFromPath(new URL(a.href, window.location.href).pathname);
+    } catch (e) {
+      return;
+    }
+    if (linkSlug && linkSlug === currentSlug) {
+      a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
+      // if a submenu item matches, light up its top-level parent too
+      const topLink = a.closest('.nav-sections > ul > li')?.querySelector(':scope > a');
+      if (topLink && topLink !== a) topLink.classList.add('active');
+    }
+  });
+}
+
 /**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -183,6 +213,7 @@ export default async function decorate(block) {
         wireDropdown(li, nav);
       }
     });
+    markActiveNav(nav);
   }
 
   // close open dropdowns when clicking outside

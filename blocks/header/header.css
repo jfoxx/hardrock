@@ -301,7 +301,8 @@ header nav .nav-sections a {
   text-decoration: none;
 }
 
-header nav .nav-sections a:hover { color: #b8b8b8; }
+header nav .nav-sections a:hover,
+header nav .nav-sections a.active { color: #b8b8b8; }
 
 /* dropdown parents */
 header nav .nav-sections li.nav-drop { position: relative; }
