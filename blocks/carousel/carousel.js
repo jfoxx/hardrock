@@ -47,17 +47,45 @@ function bindEvents(block) {
   const slideIndicators = block.querySelector('.carousel-slide-indicators');
   if (!slideIndicators) return;
 
+  // Auto-advance (hero only): step slides every 5s. Pauses on hover, and stops
+  // permanently once the user takes control via the arrows or indicators.
+  const autoplay = block.classList.contains('hero')
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let autoplayTimer = null;
+  let autoplayStopped = false;
+
+  const startAutoplay = () => {
+    if (autoplay && !autoplayStopped && !autoplayTimer) {
+      autoplayTimer = setInterval(() => {
+        showSlide(block, (parseInt(block.dataset.activeSlide, 10) || 0) + 1);
+      }, 5000);
+    }
+  };
+  const pauseAutoplay = () => {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  };
+  const stopAutoplay = () => {
+    autoplayStopped = true;
+    pauseAutoplay();
+  };
+
   slideIndicators.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', (e) => {
+      stopAutoplay();
       const slideIndicator = e.currentTarget.parentElement;
       showSlide(block, parseInt(slideIndicator.dataset.targetSlide, 10));
     });
   });
 
   block.querySelector('.slide-prev').addEventListener('click', () => {
+    stopAutoplay();
     showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
   });
   block.querySelector('.slide-next').addEventListener('click', () => {
+    stopAutoplay();
     showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
   });
 
@@ -69,6 +97,12 @@ function bindEvents(block) {
   block.querySelectorAll('.carousel-slide').forEach((slide) => {
     slideObserver.observe(slide);
   });
+
+  if (autoplay) {
+    block.addEventListener('mouseenter', pauseAutoplay);
+    block.addEventListener('mouseleave', startAutoplay);
+    startAutoplay();
+  }
 }
 
 function createSlide(row, slideIndex, carouselId) {

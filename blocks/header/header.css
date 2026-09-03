@@ -19,13 +19,22 @@ header .nav-wrapper {
   transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-/* gradient overlay while at the top of the page */
+/* gradient overlay while at the top of the page — strong behind the nav, then
+   fades into the hero below it so the logo/links stay legible on light images */
 header .nav-wrapper::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
+  height: calc(100% + 90px);
   z-index: -1;
-  background: linear-gradient(180deg, rgb(0 0 0 / 80%) 0%, rgb(0 0 0 / 35%) 55%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 85%) 0%,
+    rgb(0 0 0 / 80%) 38%,
+    rgb(0 0 0 / 55%) 64%,
+    rgb(0 0 0 / 22%) 84%,
+    transparent 100%
+  );
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
