@@ -1,0 +1,23 @@
+{
+  "name": "calendar-of-events",
+  "version": "1.0.0",
+  "description": "Calendar-of-events block. Reads URL params on the page it lives on: no param shows the full upcoming-events list; ?event=<slug> shows that single event's detail (image, title, date/time, description, Buy Tickets); ?date=M/D/YYYY shows events on that date. Feed-driven from the calendar events-index.json; the slug is the event page's last path segment.",
+  "sourceContext": {
+    "originUrl": "https://hotel.hardrock.com/daytona-beach/calendar-of-events.aspx",
+    "originPage": "Calendar of Events (list + single-event + by-date views)",
+    "feed": "/daytona-beach/calendar-of-events/events-index.json"
+  },
+  "config": {
+    "source": "optional feed path override (default /daytona-beach/calendar-of-events/events-index.json)",
+    "limit": "optional cap on the number of events in the default list (0 = no cap)"
+  },
+  "params": {
+    "event": "event slug → single-event detail view",
+    "date": "M/D/YYYY → events on that date"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark cards on a light page",
+    "purpose": "event",
+    "imagePattern": "large"
+  }
+}

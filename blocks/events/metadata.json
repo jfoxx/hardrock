@@ -1,0 +1,20 @@
+{
+  "name": "events",
+  "version": "1.0.0",
+  "description": "Feed-driven upcoming-events cards. Reads a `limit` (and optional `source` feed) from block config, fetches the calendar events-index.json, and renders the soonest upcoming events as image + title + date/time + Details cards. Buy Tickets renders only when the feed row carries a tickets URL.",
+  "sourceContext": {
+    "originUrl": "https://hotel.hardrock.com/daytona-beach/",
+    "originPage": "Events That Rock event listing cards",
+    "feed": "/daytona-beach/calendar-of-events/events-index.json"
+  },
+  "config": {
+    "limit": "number of cards to show (default 3)",
+    "source": "optional feed path override (default /daytona-beach/calendar-of-events/events-index.json)"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "compact",
+    "purpose": "event",
+    "imagePattern": "large"
+  }
+}

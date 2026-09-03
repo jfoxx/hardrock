@@ -1,0 +1,229 @@
+/* ===== Shared ===== */
+.calendar-of-events .calendar-of-events-heading {
+  margin: 0 0 24px;
+}
+
+.calendar-of-events .calendar-of-events-empty {
+  margin: 24px 0;
+  color: var(--text-color);
+}
+
+/* ===== Filters ===== */
+.calendar-of-events .calendar-of-events-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 32px;
+}
+
+/* self-labeling dropdown buttons (styled like the source) */
+.calendar-of-events .calendar-of-events-filters select {
+  appearance: none;
+  min-width: 260px;
+  padding: 14px 48px 14px 24px;
+  border: 2px solid var(--brand-purple);
+  border-radius: 0;
+  font: inherit;
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 12px 8px;
+}
+
+/* Category = filled purple with a white chevron */
+.calendar-of-events .calendar-of-events-filter-category {
+  background-color: var(--brand-purple);
+  color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+}
+
+/* Date = outlined with a purple chevron */
+.calendar-of-events .calendar-of-events-filter-date {
+  background-color: #fff;
+  color: var(--brand-purple);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%2359568f' stroke-width='2' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+}
+
+.calendar-of-events .calendar-of-events-filters select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* option list reads normally, not stretched by the button's letter-spacing */
+.calendar-of-events .calendar-of-events-filters option {
+  color: var(--text-color);
+  letter-spacing: normal;
+}
+
+/* ===== List view (cards) — 3 across on desktop ===== */
+.calendar-of-events .calendar-of-events-grid > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  text-align: left;
+}
+
+@media (width >= 600px) {
+  .calendar-of-events .calendar-of-events-grid > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .calendar-of-events .calendar-of-events-grid > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.calendar-of-events .calendar-of-events-grid > ul > li {
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+}
+
+.calendar-of-events .calendar-of-events-card-image {
+  line-height: 0;
+}
+
+.calendar-of-events .calendar-of-events-card-image img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+}
+
+.calendar-of-events .calendar-of-events-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 16px;
+  padding: 28px 24px 32px;
+  color: #fff;
+}
+
+.calendar-of-events .calendar-of-events-card-title {
+  margin: 0;
+  color: #fff;
+  font-size: var(--heading-font-size-s);
+  line-height: 1.2;
+}
+
+.calendar-of-events .calendar-of-events-card-when {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.calendar-of-events .calendar-of-events-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 0;
+  margin-top: auto;
+}
+
+/* stylelint-disable no-descending-specificity */
+.calendar-of-events .calendar-of-events-card-actions .button {
+  margin: 0;
+  padding: 12px 26px;
+}
+
+.calendar-of-events .calendar-of-events-card-actions .button.secondary {
+  border-color: var(--brand-purple);
+  background-color: transparent;
+  color: #fff;
+}
+
+.calendar-of-events .calendar-of-events-card-actions .button.secondary:hover,
+.calendar-of-events .calendar-of-events-card-actions .button.secondary:focus-visible {
+  border-color: var(--brand-purple);
+  background-color: var(--brand-purple);
+  color: #fff;
+}
+/* stylelint-enable no-descending-specificity */
+
+/* ===== Detail view ===== */
+.calendar-of-events .calendar-of-events-back {
+  display: inline-block;
+  margin: 0 0 24px;
+  color: var(--brand-purple);
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.calendar-of-events .calendar-of-events-back::before {
+  content: '\2039';
+  margin-right: 8px;
+}
+
+.calendar-of-events .calendar-of-events-back:hover {
+  color: var(--link-hover-color);
+}
+
+.calendar-of-events .calendar-of-events-detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calendar-of-events .calendar-of-events-detail-media {
+  line-height: 0;
+}
+
+.calendar-of-events .calendar-of-events-detail-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.calendar-of-events .calendar-of-events-detail-body h1 {
+  margin: 0 0 12px;
+}
+
+.calendar-of-events .calendar-of-events-detail-when {
+  margin: 0 0 16px;
+  font-size: var(--body-font-size-m);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brand-purple);
+}
+
+.calendar-of-events .calendar-of-events-detail-desc {
+  margin: 0 0 24px;
+  font-size: var(--body-font-size-m);
+}
+
+.calendar-of-events .calendar-of-events-detail-actions .button {
+  margin: 0;
+}
+
+/* ===== Desktop ===== */
+@media (width >= 900px) {
+  .calendar-of-events .calendar-of-events-detail-layout {
+    flex-direction: row;
+    align-items: start;
+    gap: 40px;
+  }
+
+  .calendar-of-events .calendar-of-events-detail-media {
+    flex: 1 1 55%;
+    min-width: 0;
+  }
+
+  .calendar-of-events .calendar-of-events-detail-body {
+    flex: 1 1 45%;
+  }
+}

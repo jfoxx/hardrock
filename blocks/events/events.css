@@ -1,0 +1,79 @@
+.events > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  text-align: left;
+}
+
+.events > ul > li {
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+}
+
+.events .events-card-image {
+  line-height: 0;
+}
+
+.events .events-card-image img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+}
+
+.events .events-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 16px;
+  padding: 28px 24px 32px;
+  color: #fff;
+}
+
+.events .events-card-title {
+  margin: 0;
+  color: #fff;
+  font-size: var(--heading-font-size-s);
+  line-height: 1.2;
+}
+
+.events .events-card-when {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.events .events-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 0;
+
+  /* push actions to the bottom of the card so rows align */
+  margin-top: auto;
+}
+
+/* Details = filled purple; Buy Tickets = outlined, tuned for the black card */
+/* stylelint-disable no-descending-specificity */
+.events .events-card-actions .button {
+  margin: 0;
+  padding: 12px 26px;
+}
+
+.events .events-card-actions .button.secondary {
+  border-color: var(--brand-purple);
+  background-color: transparent;
+  color: #fff;
+}
+
+.events .events-card-actions .button.secondary:hover,
+.events .events-card-actions .button.secondary:focus-visible {
+  border-color: var(--brand-purple);
+  background-color: var(--brand-purple);
+  color: #fff;
+}
+/* stylelint-enable no-descending-specificity */
