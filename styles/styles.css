@@ -21,7 +21,7 @@
   --link-color: #59568f;
   --link-hover-color: #23527c;
 
-  /*hard rock specific colors */
+  /* hard rock specific colors */
   --brand-purple: #59568f;
   --brand-gold: #c9a96e;
 
@@ -363,9 +363,74 @@ main .section[data-align="center"] > .default-content-wrapper {
 main .section.dark {
   background-color: var(--dark-color);
   color: var(--light-color);
+
   --text-color: var(--light-color);
 }
 
 main .section[data-background='purple'] {
   background-color: var(--brand-purple);
+}
+
+/* ===== Section reveal animations (section metadata: Animate) =====
+   JS arms a section with `.animate` (initial hidden state) and adds
+   `.animate-in` when it scrolls into view. */
+
+/* slide-up: rises slightly from below while fading in */
+main .section[data-animate='slide-up'].animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform;
+}
+
+main .section[data-animate='slide-up'].animate.animate-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* slide-down: descends slightly from above while fading in */
+main .section[data-animate='slide-down'].animate {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform;
+}
+
+main .section[data-animate='slide-down'].animate.animate-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* drop-in: each top-level element drops down in succession */
+main .section[data-animate='drop-in'].animate > div > * {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+main .section[data-animate='drop-in'].animate.animate-in > div > * {
+  animation: section-drop-in 0.6s ease forwards;
+  animation-delay: calc(var(--animate-index, 0) * 0.12s);
+}
+
+@keyframes section-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* respect reduced-motion: show everything, no movement */
+@media (prefers-reduced-motion: reduce) {
+  main .section[data-animate].animate,
+  main .section[data-animate='drop-in'].animate > div > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
 }

@@ -156,6 +156,40 @@ export function decorateMain(main) {
 }
 
 /**
+ * Reveal-on-scroll for sections authored with the `animate` section-metadata
+ * (data-animate="slide-up" | "slide-down" | "drop-in"). Arms each section with
+ * the `animate` class (initial hidden state lives in CSS) and adds `animate-in`
+ * when it scrolls into view. Skipped entirely under prefers-reduced-motion so
+ * content stays visible.
+ * @param {Element} main The main element
+ */
+function decorateAnimations(main) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sections = main.querySelectorAll('.section[data-animate]');
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  sections.forEach((section) => {
+    section.classList.add('animate');
+    // drop-in staggers the section's top-level content elements.
+    if (section.dataset.animate === 'drop-in') {
+      section.querySelectorAll(':scope > div > *').forEach((el, i) => {
+        el.style.setProperty('--animate-index', i);
+      });
+    }
+    observer.observe(section);
+  });
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -165,6 +199,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    decorateAnimations(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
