@@ -1,20 +1,175 @@
+/* Footer — Hard Rock Hotel Daytona Beach. Dark band, three columns on desktop. */
+
 footer {
-  background-color: var(--light-color);
+  background-color: rgb(15 15 15);
+  color: rgb(171 171 171);
   font-size: var(--body-font-size-xs);
 }
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+/* Mobile-first: single stacked column, centered content (matches source). */
+footer .footer-inner {
+  margin: 0 auto;
+  max-width: 1170px;
+  padding: 75px 15px;
+  text-align: center;
 }
 
-footer .footer p {
+/* Bands — spacing comes from column padding (no flex gap), matching source. */
+footer .footer-top {
+  display: flex;
+  flex-direction: column;
+}
+
+footer .footer-bottom {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+footer .footer-col {
+  margin: 0 0 30px;
+}
+
+footer .footer-col:last-child {
+  margin-bottom: 0;
+}
+
+/* Links */
+footer a:any-link {
+  color: rgb(171 171 171);
+  text-decoration: none;
+  transition: color 0.5s, background-color 0.5s, opacity 0.5s;
+}
+
+footer a:any-link:hover {
+  color: rgb(255 255 255);
+}
+
+footer p {
+  margin: 0 0 8px;
+}
+
+/* Brand logo */
+footer .footer-brand img {
+  width: 119px;
+  height: auto;
+}
+
+footer .footer-brand a:hover {
+  opacity: 0.8;
+}
+
+/* Primary nav + legal lists */
+footer .footer-nav,
+footer .footer-legal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer .footer-nav li {
+  margin-bottom: 8px;
+}
+
+/* Contact / address */
+footer .footer-contact p {
+  margin: 0 0 4px;
+}
+
+/* Social icons — circular buttons */
+footer .footer-social {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+footer .footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(171 171 171);
+}
+
+footer .footer-social-link:hover {
+  background-color: rgb(255 255 255);
+}
+
+footer .footer-social-icon {
+  width: 18px;
+  height: 18px;
+  background-color: rgb(15 15 15);
+  mask: var(--footer-social-icon) no-repeat center / contain;
+}
+
+footer .footer-social-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Bottom band */
+footer .footer-copyright {
   margin: 0;
 }
 
+footer .footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  justify-content: center;
+}
+
+/* Tablet and up: two-column top band */
+@media (width >= 600px) {
+  footer .footer-top {
+    flex-flow: row wrap;
+  }
+
+  footer .footer-col {
+    flex: 1 1 45%;
+  }
+}
+
+/* Desktop: three equal columns, horizontal bottom band, left-aligned copy */
 @media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+  footer .footer-inner {
+    text-align: left;
+  }
+
+  footer .footer-top {
+    flex-wrap: nowrap;
+  }
+
+  footer .footer-col {
+    flex: 1 1 33.333%;
+    margin-bottom: 0;
+    padding: 0 15px;
+  }
+
+  footer .footer-social {
+    justify-content: flex-start;
+  }
+
+  footer .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .footer-legal {
+    justify-content: flex-end;
   }
 }
