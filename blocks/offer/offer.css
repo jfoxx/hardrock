@@ -1,0 +1,160 @@
+/* Single offer card — mirrors one card of the offers block, constrained to a
+   single-card width so authors preview it the way it appears in the grid. */
+.offer .offer-card {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  background-color: var(--background-color);
+  border: 1px solid #e2e2e2;
+  text-align: left;
+  margin-top: 200px;
+}
+
+.offer .offer-card-image {
+  position: relative;
+  line-height: 0;
+}
+
+.offer .offer-card-image img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.offer .offer-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 14px;
+  padding: 24px;
+}
+
+.offer .offer-card-title {
+  margin: 0;
+  font-size: var(--heading-font-size-s);
+  line-height: 1.2;
+}
+
+.offer .offer-card-summary {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+}
+
+.offer .offer-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 0;
+  margin-top: auto;
+}
+
+/* stylelint-disable no-descending-specificity */
+.offer .offer-card-actions .button {
+  margin: 0;
+  flex: 1 1 auto;
+  padding: 12px 22px;
+}
+
+.offer .offer-card-actions .button.secondary {
+  border-color: var(--brand-purple);
+  background-color: transparent;
+  color: var(--brand-purple);
+}
+
+.offer .offer-card-actions .button.secondary:hover,
+.offer .offer-card-actions .button.secondary:focus-visible {
+  border-color: var(--brand-purple);
+  background-color: var(--brand-purple);
+  color: #fff;
+}
+/* stylelint-enable no-descending-specificity */
+
+/* ===== More Info modal ===== */
+/* stylelint-disable no-descending-specificity */
+.offer-modal {
+  width: min(640px, 92vw);
+  max-height: 90vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  overflow: auto;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.offer-modal::backdrop {
+  background-color: rgb(0 0 0 / 70%);
+}
+
+.offer-modal-inner {
+  position: relative;
+}
+
+.offer-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0 0 0 / 55%);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.offer-modal-close:hover {
+  background-color: rgb(0 0 0 / 80%);
+}
+
+.offer-modal-media {
+  line-height: 0;
+}
+
+.offer-modal-media img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.offer-modal-body {
+  padding: 28px 32px 36px;
+}
+
+.offer-modal-title {
+  margin: 0 0 16px;
+  font-size: var(--heading-font-size-m);
+  line-height: 1.2;
+}
+
+.offer-modal-details {
+  margin: 0 0 24px;
+  font-size: var(--body-font-size-m);
+  line-height: 1.7;
+}
+
+.offer-modal-details :first-child {
+  margin-top: 0;
+}
+
+.offer-modal-details ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.offer-modal-details li {
+  margin: 4px 0;
+}
+
+.offer-modal-actions .button {
+  margin: 0;
+}
+/* stylelint-enable no-descending-specificity */
