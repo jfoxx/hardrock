@@ -211,6 +211,18 @@ function syncUrl(date, category) {
   window.history.replaceState({}, '', `${window.location.pathname}${qs ? `?${qs}` : ''}`);
 }
 
+/**
+ * Qualify the visitor by the month of the event they're viewing, writing a Target
+ * profile attribute (e.g. profile.eventInterestMonth = october). Fires on the stable
+ * detail-view load — no navigation race. No-op unless the page has Target enabled.
+ */
+function qualifyInterestMonth(startStr) {
+  const dt = new Date(startStr);
+  if (Number.isNaN(dt.getTime()) || typeof window.setTargetProfile !== 'function') return;
+  const month = dt.toLocaleDateString('en-US', { month: 'long' }).toLowerCase();
+  window.setTargetProfile({ 'profile.eventInterestMonth': month });
+}
+
 /** List view with Date + Category filters sourced from the events themselves. */
 function renderListView(block, events, page, initial) {
   // Distinct months, in chronological order, present in the feed (value = first of month).
@@ -295,6 +307,7 @@ export default async function decorate(block) {
     const match = events.find((e) => slugOf(e) === eventParam);
     if (match) {
       block.append(buildDetail(match, page));
+      qualifyInterestMonth(match['start-date-time']);
       return;
     }
     // fall through to the list if the slug doesn't match anything
