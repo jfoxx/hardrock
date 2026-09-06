@@ -10,7 +10,118 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  decorateBlock,
+  loadBlock,
+  getMetadata,
 } from './aem.js';
+
+// ===== Adobe Target =====
+// Opt a page in with a `target` metadata (<meta name="target" content="on">).
+// Requires Adobe Target's at.js saved to /scripts/at.js (Target → Setup →
+// Implementation → Edit at.js settings → Download). Blocks can await
+// `window.atjsPromise` then call `window.adobe.target.getOffers(...)`.
+const AT_PROPERTY = ''; // optional at_property token; leave '' to skip property scoping
+
+function setTargetPageParams() {
+  if (!AT_PROPERTY) return;
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.text = `function targetPageParams() { return { "at_property": "${AT_PROPERTY}" }; }`;
+  document.head.appendChild(script);
+}
+
+function initATJS(path, config) {
+  window.targetGlobalSettings = config;
+  return new Promise((resolve, reject) => {
+    import(path).then(resolve).catch(reject);
+  });
+}
+
+// Run `fn` now (if content is already decorated) and again as sections/blocks
+// finish decorating, so Target offers apply to async-rendered EDS content.
+function onDecoratedElement(fn) {
+  if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+    fn();
+  }
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((m) => m.target.tagName === 'BODY'
+      || m.target.dataset.sectionStatus === 'loaded'
+      || m.target.dataset.blockStatus === 'loaded')) {
+      fn();
+    }
+  });
+  observer.observe(document.querySelector('main'), {
+    subtree: true, attributes: true, attributeFilter: ['data-block-status', 'data-section-status'],
+  });
+  observer.observe(document.querySelector('body'), { childList: true });
+}
+
+function toCssSelector(selector) {
+  return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
+}
+
+async function getElementForOffer(offer) {
+  const selector = offer.cssSelector || toCssSelector(offer.selector);
+  return document.querySelector(selector);
+}
+
+// Target may deliver a fragment reference (<div data-fragment="/path">); turn it
+// into an EDS fragment block so its content (e.g. an offer XF) loads and decorates.
+function autoDecorateFragment(el) {
+  const a = document.createElement('a');
+  a.href = el.getAttribute('data-fragment');
+  a.className = 'at-element-marker';
+  const fragmentBlock = buildBlock('fragment', a);
+  el.replaceWith(fragmentBlock);
+  decorateBlock(fragmentBlock);
+  return loadBlock(fragmentBlock);
+}
+
+function observeAndDecorateFragments() {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-fragment')) {
+          autoDecorateFragment(node);
+        }
+      });
+    });
+  });
+  observer.observe(document.querySelector('main'), { childList: true, subtree: true });
+}
+
+async function getAndApplyOffers() {
+  const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
+  const { options = [] } = response.execute.pageLoad;
+  onDecoratedElement(() => {
+    window.adobe.target.applyOffers({ response });
+    // drop offers that have already been applied so re-runs don't duplicate them
+    options.forEach((o) => {
+      // eslint-disable-next-line no-param-reassign
+      o.content = o.content.filter((c) => !getElementForOffer(c));
+    });
+  });
+}
+
+window.atjsPromise = Promise.resolve();
+if (getMetadata('target')) {
+  setTargetPageParams();
+  window.atjsPromise = initATJS('/scripts/at.js', {
+    clientCode: 'foxx',
+    serverDomain: 'foxx.tt.omtrdc.net',
+    imsOrgId: '4009236F6182AB170A495EC3@AdobeOrg',
+    bodyHidingEnabled: false,
+    cookieDomain: window.location.hostname,
+    pageLoadEnabled: false,
+    secureOnly: true,
+    viewsEnabled: false,
+    withWebGLRenderer: false,
+  }).catch(() => { /* at.js missing/blocked — blocks fall back to no personalization */ });
+  document.addEventListener('at-library-loaded', () => {
+    observeAndDecorateFragments();
+    getAndApplyOffers();
+  });
+}
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
   const innerTT = window.trustedTypes.createPolicy('tt-inner', {
