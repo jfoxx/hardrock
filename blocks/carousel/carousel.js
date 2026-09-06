@@ -1,3 +1,36 @@
+import { getMetadata } from '../../scripts/aem.js';
+
+// Synxis booking base, shared with the offers block.
+const BOOK_BASE = 'https://be.synxis.com/?Hotel=78302&Chain=13924';
+
+/** Resolve a relative asset URL against the fragment's folder, kept same-origin. */
+function rebaseUrl(u, folder) {
+  if (!u || /^(https?:)?\/\//.test(u) || u.startsWith('/')) return u;
+  const abs = new URL(u, `${window.location.origin}${folder}`);
+  return abs.pathname + abs.search;
+}
+
+/** Rebase every source/img in a picture that came from a fetched fragment. */
+function rebasePicture(picture, folder) {
+  picture.querySelectorAll('source[srcset]').forEach((s) => {
+    s.setAttribute('srcset', rebaseUrl(s.getAttribute('srcset'), folder));
+  });
+  const img = picture.querySelector('img');
+  if (img) img.setAttribute('src', rebaseUrl(img.getAttribute('src'), folder));
+}
+
+/** Decode HTML entities the feed carries (e.g. &#x26;) into plain text. */
+function decodeEntities(str) {
+  const t = document.createElement('textarea');
+  t.innerHTML = str || '';
+  return t.value;
+}
+
+/** Synxis booking URL for a promo code. */
+function bookHref(promo) {
+  return promo ? `${BOOK_BASE}&promo=${encodeURIComponent(promo)}` : BOOK_BASE;
+}
+
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel');
   const slideIndex = parseInt(slide.dataset.slideIndex, 10);
@@ -45,7 +78,7 @@ export function showSlide(block, slideIndex = 0) {
 
 function bindEvents(block) {
   const slideIndicators = block.querySelector('.carousel-slide-indicators');
-  if (!slideIndicators) return;
+  if (!slideIndicators) return null;
 
   // Auto-advance (hero only): step slides every 5s. Pauses on hover, and stops
   // permanently once the user takes control via the arrows or indicators.
@@ -103,6 +136,9 @@ function bindEvents(block) {
     block.addEventListener('mouseleave', startAutoplay);
     startAutoplay();
   }
+
+  // Expose hooks so a later-added (e.g. Target-personalized) slide can be wired.
+  return { observer: slideObserver, stop: stopAutoplay };
 }
 
 function createSlide(row, slideIndex, carouselId) {
@@ -122,6 +158,141 @@ function createSlide(row, slideIndex, carouselId) {
   }
 
   return slide;
+}
+
+/** Parse a raw `.offer` block (as authored / as Target injects it) into slide fields. */
+function offerFromBlock(offerEl) {
+  const fields = {};
+  [...offerEl.children].forEach((row) => {
+    const cells = row.children;
+    if (cells.length < 2) return;
+    const [keyCell, value] = cells;
+    fields[keyCell.textContent.trim().toLowerCase()] = value;
+  });
+  return {
+    title: fields.title ? fields.title.textContent.trim() : '',
+    summary: fields.summary ? fields.summary.textContent.trim() : '',
+    promo: fields.promo ? fields.promo.textContent.trim() : '',
+    picture: fields.image ? fields.image.querySelector('picture, img') : null,
+  };
+}
+
+/**
+ * Fashion an offer into the first hero slide and wire it into the running carousel
+ * (indicator, active-slide observer, autoplay). Runs at most once per carousel.
+ */
+function buildSlideFromOffer(block, cid, controls, offer) {
+  if (!controls || !offer.picture || block.dataset.targetedSlideAdded) return;
+  block.setAttribute('data-targeted-slide-added', 'true');
+
+  const title = decodeEntities(offer.title);
+  const summary = decodeEntities(offer.summary) || title;
+
+  const row = document.createElement('div');
+  const imageCol = document.createElement('div');
+  imageCol.append(offer.picture);
+  const contentCol = document.createElement('div');
+  const heading = document.createElement('h2');
+  heading.textContent = title;
+  const caption = document.createElement('p');
+  const link = document.createElement('a');
+  link.href = bookHref(offer.promo);
+  link.textContent = summary;
+  caption.append(link);
+  contentCol.append(heading, caption);
+  row.append(imageCol, contentCol);
+
+  const slidesWrapper = block.querySelector('.carousel-slides');
+  const slide = createSlide(row, 0, cid);
+  slide.classList.add('carousel-slide-targeted');
+  slidesWrapper.prepend(slide); // featured offer goes first
+
+  const slideIndicators = block.querySelector('.carousel-slide-indicators');
+  if (slideIndicators) {
+    const indicator = document.createElement('li');
+    indicator.classList.add('carousel-slide-indicator');
+    indicator.innerHTML = '<button type="button" aria-label="Featured offer"></button>';
+    indicator.querySelector('button').addEventListener('click', (e) => {
+      controls.stop();
+      showSlide(block, parseInt(e.currentTarget.parentElement.dataset.targetSlide, 10));
+    });
+    slideIndicators.prepend(indicator);
+  }
+
+  // Renumber slides + indicators by DOM order so navigation stays in sync.
+  block.querySelectorAll('.carousel-slide').forEach((s, i) => {
+    s.setAttribute('data-slide-index', i);
+    s.setAttribute('id', `carousel-${cid}-slide-${i}`);
+    const h = s.querySelector('h1, h2, h3, h4, h5, h6');
+    if (h) {
+      if (!h.id) h.setAttribute('id', `carousel-${cid}-slide-${i}-title`);
+      s.setAttribute('aria-labelledby', h.id);
+    }
+  });
+  block.querySelectorAll('.carousel-slide-indicator').forEach((ind, i) => {
+    ind.setAttribute('data-target-slide', i);
+  });
+
+  controls.observer.observe(slide);
+  // Open on the featured slide.
+  block.setAttribute('data-active-slide', '0');
+  slidesWrapper.scrollTo({ left: 0, behavior: 'instant' });
+}
+
+/**
+ * Fetch an offer XF and inject its raw `.offer` HTML into the slot — used only to
+ * simulate a Target injection for local testing via ?offer-xf=<path>.
+ */
+async function injectTestOffer(path, slot) {
+  try {
+    const clean = path.replace(/\.plain\.html$/, '').replace(/\/+$/, '');
+    const resp = await fetch(`${clean}.plain.html`);
+    if (!resp.ok) return;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = await resp.text();
+    const offerEl = tmp.querySelector('.offer');
+    if (!offerEl) return;
+    // The test XF has media relative to its own folder; rebase so it renders here.
+    const folder = new URL(clean, window.location.origin).pathname.replace(/[^/]+$/, '');
+    const picture = offerEl.querySelector('picture');
+    if (picture) rebasePicture(picture, folder);
+    slot.append(offerEl);
+  } catch (e) {
+    // ignore — nothing to preview
+  }
+}
+
+/**
+ * Watch for a Target-injected `.offer` block and turn it into the first hero slide.
+ * Target injects the offer XF's HTML into the page (into `.carousel-offer-slot`, or
+ * anywhere in <main>); we consume it, build the slide, and remove the raw markup.
+ * A ?offer-xf=<path> param simulates the injection for local testing.
+ */
+function watchForInjectedOffer(block, cid, controls) {
+  if (!controls) return;
+  const param = new URLSearchParams(window.location.search).get('offer-xf');
+  if (!param && !getMetadata('target')) return;
+
+  const slot = document.createElement('div');
+  slot.className = 'carousel-offer-slot';
+  slot.hidden = true;
+  block.append(slot);
+
+  const consume = () => {
+    const offerEl = document.querySelector('main .offer');
+    if (!offerEl) return false;
+    buildSlideFromOffer(block, cid, controls, offerFromBlock(offerEl));
+    offerEl.remove(); // its picture was moved into the slide; drop the raw markup
+    return true;
+  };
+
+  const observer = new MutationObserver(() => {
+    if (consume()) observer.disconnect();
+  });
+  observer.observe(document.querySelector('main'), { childList: true, subtree: true });
+
+  if (param) injectTestOffer(param, slot);
+  else if (consume()) observer.disconnect();
 }
 
 let carouselId = 0;
@@ -180,6 +351,10 @@ export default async function decorate(block) {
   block.prepend(container);
 
   if (!isSingleSlide) {
-    bindEvents(block);
+    const controls = bindEvents(block);
+    // Hero carousel only: turn a Target-injected offer XF into the first slide.
+    if (block.classList.contains('hero')) {
+      watchForInjectedOffer(block, carouselId, controls);
+    }
   }
 }
