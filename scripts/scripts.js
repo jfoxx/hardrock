@@ -92,13 +92,13 @@ function observeAndDecorateFragments() {
 
 async function getAndApplyOffers() {
   const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
-  const { options = [] } = response.execute.pageLoad;
+  const { options = [] } = response?.execute?.pageLoad || {};
   onDecoratedElement(() => {
     window.adobe.target.applyOffers({ response });
     // drop offers that have already been applied so re-runs don't duplicate them
     options.forEach((o) => {
       // eslint-disable-next-line no-param-reassign
-      o.content = o.content.filter((c) => !getElementForOffer(c));
+      if (Array.isArray(o.content)) o.content = o.content.filter((c) => !getElementForOffer(c));
     });
   });
 }

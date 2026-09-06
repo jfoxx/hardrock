@@ -23,11 +23,10 @@ function rebaseImages(doc, base) {
 }
 
 /**
- * Build the ordered list of footer fragment paths to try. Mirrors the header:
- * the `nav` metadata points at the section's nav folder (e.g. /daytona-beach/nav)
- * and the footer doc lives beside the header at <folder>/footer. Each candidate
- * is tried under /content first (localhost / aem up) then at the real path
- * (DA/EDS prod). The site-root footer fragment is the final fallback.
+ * Build the footer fragment paths to try. Mirrors the header: the `nav` metadata
+ * points at the section's nav folder (e.g. /daytona-beach/nav) and the footer doc
+ * lives beside the header at <folder>/footer. The site-root footer fragment is the
+ * final fallback. Each candidate carries the base its relative image srcs resolve against.
  */
 function footerCandidates() {
   const navMeta = getMetadata('nav');
@@ -35,38 +34,26 @@ function footerCandidates() {
   if (navMeta) {
     const folder = new URL(navMeta, window.location).pathname.replace(/\/+$/, '');
     const scoped = `${folder}/footer`;
-    list.push({ url: `/content${scoped}.plain.html`, base: `/content${scoped.replace(/[^/]+$/, '')}` });
     list.push({ url: `${scoped}.plain.html`, base: scoped.replace(/[^/]+$/, '') });
   }
+  list.push({ url: '/footer.plain.html', base: '/' });
   return list;
 }
 
 async function fetchFooter() {
-  // Section-scoped footer first (mirrors the header's nav-folder pattern)...
   const candidates = footerCandidates();
   for (let i = 0; i < candidates.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    const scopedResp = await fetch(candidates[i].url);
-    if (scopedResp.ok) {
+    const resp = await fetch(candidates[i].url);
+    if (resp.ok) {
       // eslint-disable-next-line no-await-in-loop
-      const scopedHtml = await scopedResp.text();
-      const scopedDoc = new DOMParser().parseFromString(scopedHtml, 'text/html');
-      rebaseImages(scopedDoc, candidates[i].base);
-      return scopedDoc;
+      const html = await resp.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      rebaseImages(doc, candidates[i].base);
+      return doc;
     }
   }
-  // ...then the site-root fragment: /content first (localhost), then root (prod).
-  let resp = await fetch('/content/footer.plain.html');
-  let base = '/content/';
-  if (!resp.ok) {
-    resp = await fetch('/footer.plain.html');
-    base = '/';
-  }
-  if (!resp.ok) return null;
-  const html = await resp.text();
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  rebaseImages(doc, base);
-  return doc;
+  return null;
 }
 
 /**

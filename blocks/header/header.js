@@ -4,12 +4,11 @@ import { getMetadata } from '../../scripts/aem.js';
 const isDesktop = window.matchMedia('(min-width: 1100px)');
 
 /**
- * Build the ordered list of header paths to try.
+ * Build the list of header paths to try.
  * The `nav` metadata points at the section's nav folder (e.g. /daytona-beach/nav);
  * the header doc lives inside it at <folder>/header. Falls back to the site-root
  * /nav when the metadata is absent. Each candidate carries the base its relative
- * image srcs should resolve against, and every candidate is tried under /content
- * first (localhost / aem up) then at the real path (DA/EDS prod).
+ * image srcs should resolve against.
  */
 function headerCandidates() {
   const navMeta = getMetadata('nav');
@@ -18,10 +17,7 @@ function headerCandidates() {
     const folder = new URL(navMeta, window.location).pathname.replace(/\/+$/, '');
     path = `${folder}/header`;
   }
-  return [
-    { url: `/content${path}.plain.html`, base: `/content${path.replace(/[^/]+$/, '')}` },
-    { url: `${path}.plain.html`, base: path.replace(/[^/]+$/, '') },
-  ];
+  return [{ url: `${path}.plain.html`, base: path.replace(/[^/]+$/, '') }];
 }
 
 /**
