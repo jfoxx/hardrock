@@ -220,7 +220,7 @@ function qualifyInterestMonth(startStr) {
   const dt = new Date(startStr);
   if (Number.isNaN(dt.getTime()) || typeof window.setTargetProfile !== 'function') return;
   const month = dt.toLocaleDateString('en-US', { month: 'long' }).toLowerCase();
-  window.setTargetProfile({ 'profile.eventInterestMonth': month });
+  window.setTargetProfile({ eventInterestMonth: month });
 }
 
 /** List view with Date + Category filters sourced from the events themselves. */

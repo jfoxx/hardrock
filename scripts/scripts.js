@@ -122,16 +122,17 @@ if (getMetadata('target')) {
     getAndApplyOffers();
   });
 
-  // Write a Target profile attribute (persists on the anonymous visitor profile),
-  // e.g. { 'profile.eventInterestMonth': 'october' } — build audiences from these.
-  // Blocks call this on a stable page load (e.g. an event detail view) so the
-  // request never races a navigation.
-  window.setTargetProfile = async (parameters) => {
+  // Write Target profile attributes (persist on the anonymous visitor profile),
+  // e.g. { eventInterestMonth: 'october' } — build audiences from these. Delivery
+  // API v2 requires these in `profileParameters` with UN-prefixed keys (a `profile.`
+  // prefix in mbox `parameters` is dropped). Blocks call this on a stable page load
+  // (e.g. an event detail view) so the request never races a navigation.
+  window.setTargetProfile = async (profileParameters) => {
     try {
       await window.atjsPromise;
       if (!window.adobe?.target?.getOffers) return;
       await window.adobe.target.getOffers({
-        request: { execute: { mboxes: [{ index: 0, name: 'profile-update', parameters }] } },
+        request: { execute: { mboxes: [{ index: 0, name: 'profile-update', profileParameters }] } },
       });
     } catch (e) { /* ignore — profiling is best-effort */ }
   };
