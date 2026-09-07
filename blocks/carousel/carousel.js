@@ -171,6 +171,9 @@ function offerFromBlock(offerEl) {
   });
   return {
     title: fields.title ? fields.title.textContent.trim() : '',
+    // keep the authored title markup (e.g. <em>) so the slide can render the
+    // accent word in the decorative script font like the other hero slides
+    titleEl: fields.title || null,
     summary: fields.summary ? fields.summary.textContent.trim() : '',
     promo: fields.promo ? fields.promo.textContent.trim() : '',
     picture: fields.image ? fields.image.querySelector('picture, img') : null,
@@ -193,7 +196,12 @@ function buildSlideFromOffer(block, cid, controls, offer) {
   imageCol.append(offer.picture);
   const contentCol = document.createElement('div');
   const heading = document.createElement('h2');
-  heading.textContent = title;
+  if (offer.titleEl) {
+    // move the authored title nodes (text + <em>) in, preserving the markup
+    while (offer.titleEl.firstChild) heading.append(offer.titleEl.firstChild);
+  } else {
+    heading.textContent = title;
+  }
   const caption = document.createElement('p');
   const link = document.createElement('a');
   link.href = bookHref(offer.promo);
