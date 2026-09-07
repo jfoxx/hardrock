@@ -3,6 +3,9 @@ import { getMetadata } from '../../scripts/aem.js';
 // Synxis booking base, shared with the offers block.
 const BOOK_BASE = 'https://be.synxis.com/?Hotel=78302&Chain=13924';
 
+// Add ?tdebug to any URL to log the offer-slide pipeline to the console.
+const TDEBUG = new URLSearchParams(window.location.search).has('tdebug');
+
 /** Resolve a relative asset URL against the fragment's folder, kept same-origin. */
 function rebaseUrl(u, folder) {
   if (!u || /^(https?:)?\/\//.test(u) || u.startsWith('/')) return u;
@@ -285,10 +288,14 @@ function watchForInjectedOffer(block, cid, controls) {
   slot.className = 'carousel-offer-slot';
   slot.hidden = true;
   block.append(slot);
+  // eslint-disable-next-line no-console
+  if (TDEBUG) console.log('[carousel] offer watcher armed (waiting for injected .offer)');
 
   const consume = () => {
     const offerEl = document.querySelector('main .offer');
     if (!offerEl) return false;
+    // eslint-disable-next-line no-console
+    if (TDEBUG) console.log('[carousel] consuming injected .offer → building slide');
     buildSlideFromOffer(block, cid, controls, offerFromBlock(offerEl));
     offerEl.remove(); // its picture was moved into the slide; drop the raw markup
     return true;

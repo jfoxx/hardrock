@@ -15,6 +15,9 @@ import {
   getMetadata,
 } from './aem.js';
 
+// Add ?tdebug to any URL to log the Target/personalization pipeline to the console.
+const TDEBUG = new URLSearchParams(window.location.search).has('tdebug');
+
 // ===== Adobe Target =====
 // Opt a page in with a `target` metadata (<meta name="target" content="on">).
 // Requires Adobe Target's at.js saved to /scripts/at.js (Target → Setup →
@@ -93,6 +96,8 @@ function observeAndDecorateFragments() {
 async function getAndApplyOffers() {
   const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
   const { options = [] } = response?.execute?.pageLoad || {};
+  // eslint-disable-next-line no-console
+  if (TDEBUG) console.log('[target] pageLoad returned', options.length, 'option(s)', options);
   onDecoratedElement(() => {
     window.adobe.target.applyOffers({ response });
     // drop offers that have already been applied so re-runs don't duplicate them
@@ -128,6 +133,8 @@ if (getMetadata('target')) {
   window.setTargetProfile = async (parameters) => {
     try {
       await window.atjsPromise;
+      // eslint-disable-next-line no-console
+      if (TDEBUG) console.log('[target] setTargetProfile', parameters);
       if (!window.adobe?.target?.getOffers) return;
       await window.adobe.target.getOffers({
         request: { execute: { mboxes: [{ index: 0, name: 'profile-update', parameters }] } },
