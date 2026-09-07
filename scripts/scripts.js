@@ -63,9 +63,14 @@ function toCssSelector(selector) {
   return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
 }
 
-async function getElementForOffer(offer) {
-  const selector = offer.cssSelector || toCssSelector(offer.selector);
-  return document.querySelector(selector);
+// Synchronous on purpose: the dedup below tests whether an offer has ALREADY been
+// applied (its element exists). If this returns a Promise it's always truthy and
+// wipes the offer content after the first apply, before EDS has decorated the
+// target — so the offer never gets applied. Returning the element (or null) lets
+// applyOffers retry on each decoration tick until the target exists.
+function getElementForOffer(offer) {
+  const selector = offer.cssSelector || (offer.selector ? toCssSelector(offer.selector) : null);
+  return selector ? document.querySelector(selector) : null;
 }
 
 // Target may deliver a fragment reference (<div data-fragment="/path">); turn it

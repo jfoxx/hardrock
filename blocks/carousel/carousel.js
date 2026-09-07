@@ -292,10 +292,11 @@ function watchForInjectedOffer(block, cid, controls) {
   if (TDEBUG) console.log('[carousel] offer watcher armed (waiting for injected .offer)');
 
   const consume = () => {
-    const offerEl = document.querySelector('main .offer');
+    // Target may inject the offer anywhere (slot, main, or body) — find it wherever it lands.
+    const offerEl = document.querySelector('.offer');
     if (!offerEl) return false;
     // eslint-disable-next-line no-console
-    if (TDEBUG) console.log('[carousel] consuming injected .offer → building slide');
+    if (TDEBUG) console.log('[carousel] consuming injected .offer → building slide', offerEl);
     buildSlideFromOffer(block, cid, controls, offerFromBlock(offerEl));
     offerEl.remove(); // its picture was moved into the slide; drop the raw markup
     return true;
@@ -304,7 +305,7 @@ function watchForInjectedOffer(block, cid, controls) {
   const observer = new MutationObserver(() => {
     if (consume()) observer.disconnect();
   });
-  observer.observe(document.querySelector('main'), { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true });
 
   if (param) injectTestOffer(param, slot);
   else if (consume()) observer.disconnect();
