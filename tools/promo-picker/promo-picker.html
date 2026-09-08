@@ -42,6 +42,47 @@
       box-shadow: 0 0 0 1px #0265dc;
     }
 
+    .promo-toolbar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .promo-toolbar .promo-search {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .promo-refresh {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border: 1px solid #d3d3d3;
+      border-radius: 4px;
+      background: #fff;
+      font: inherit;
+      font-size: 13px;
+      color: #323232;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .promo-refresh:hover {
+      border-color: #0265dc;
+      color: #0265dc;
+    }
+
+    .promo-refresh:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .promo-refresh svg {
+      width: 14px;
+      height: 14px;
+    }
+
     .promo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -120,7 +161,15 @@
 </head>
 <body>
   <div class="promo-picker">
-    <input type="search" class="promo-search" id="promo-search" placeholder="Search promos…" autocomplete="off">
+    <div class="promo-toolbar">
+      <input type="search" class="promo-search" id="promo-search" placeholder="Search promos…" autocomplete="off">
+      <button type="button" class="promo-refresh" id="promo-refresh" title="Re-fetch the offers index">
+        <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true">
+          <path d="M9 3V1L6 4l3 3V5a4 4 0 11-4 4H3a6 6 0 106-6z"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
     <div class="promo-grid" id="promo-grid"></div>
     <div class="feedback" id="feedback"></div>
   </div>

@@ -37,9 +37,10 @@ function thumb(url) {
   return url ? url.replace(/width=\d+/, 'width=400') : '';
 }
 
-/** Fetch the offers from the index feed. */
-async function loadOffers() {
-  const resp = await fetch(FEED);
+/** Fetch the offers from the index feed. Pass bust=true to skip any cached copy. */
+async function loadOffers(bust = false) {
+  const url = bust ? `${FEED}?ts=${Date.now()}` : FEED;
+  const resp = await fetch(url, { cache: bust ? 'reload' : 'default' });
   if (!resp.ok) throw new Error(`Feed responded ${resp.status}`);
   const { data = [] } = await resp.json();
   return data;
@@ -122,6 +123,7 @@ function render(grid, offers, actions, feedback, term = '') {
 
   const grid = document.getElementById('promo-grid');
   const search = document.getElementById('promo-search');
+  const refresh = document.getElementById('promo-refresh');
   const feedback = document.getElementById('feedback');
 
   let offers = [];
@@ -135,4 +137,21 @@ function render(grid, offers, actions, feedback, term = '') {
 
   render(grid, offers, actions, feedback);
   search.addEventListener('input', () => render(grid, offers, actions, feedback, search.value));
+
+  // Re-fetch the feed, bypassing the CDN/browser cache, so new promos appear and
+  // removed ones drop off without reopening the plugin.
+  refresh.addEventListener('click', async () => {
+    refresh.disabled = true;
+    feedback.textContent = 'Refreshing…';
+    feedback.className = 'feedback';
+    try {
+      offers = await loadOffers(true);
+      render(grid, offers, actions, feedback, search.value);
+    } catch (e) {
+      feedback.textContent = 'Could not refresh offers index';
+      feedback.className = 'feedback error';
+    } finally {
+      refresh.disabled = false;
+    }
+  });
 }());
