@@ -1,0 +1,82 @@
+.booking-bar {
+  background-color: #2b2b2b;
+  padding: 20px 24px;
+}
+
+.booking-bar .booking-bar-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.booking-bar .booking-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* date fields take the extra space; the count selects stay compact */
+.booking-bar .booking-field:nth-child(1),
+.booking-bar .booking-field:nth-child(2) {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.booking-bar .booking-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b8b8b8;
+}
+
+.booking-bar input,
+.booking-bar select {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #d3d3d3;
+  border-radius: 0;
+  background-color: #fff;
+  color: #323232;
+  font: inherit;
+  font-size: 14px;
+}
+
+.booking-bar select {
+  min-width: 68px;
+  cursor: pointer;
+}
+
+.booking-bar .booking-submit {
+  height: 44px;
+  align-self: flex-end;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 0;
+  background-color: #9e6c1b;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.booking-bar .booking-submit:hover,
+.booking-bar .booking-submit:focus-visible {
+  background-color: #855a15;
+}
+
+/* Stack on narrow screens */
+@media (width < 700px) {
+  .booking-bar .booking-field,
+  .booking-bar .booking-submit {
+    flex: 1 1 100%;
+  }
+}

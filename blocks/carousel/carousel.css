@@ -197,6 +197,14 @@
   text-shadow: 2px 2px 0 rgb(0 0 0 / 55%);
 }
 
+/* When a booking bar overlaps the hero (they share a section), lift the caption
+   so it clears the bar's top half instead of crowding it. */
+@media (width >= 700px) {
+  main .section:has(.booking-bar) .carousel.hero .carousel-slide .carousel-slide-content {
+    padding-bottom: 100px;
+  }
+}
+
 .carousel.hero .carousel-slide .carousel-slide-content h2 {
   margin: 0 0 6px;
   color: #fff;
