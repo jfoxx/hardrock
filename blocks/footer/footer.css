@@ -125,6 +125,14 @@ footer .footer-copyright {
   margin: 0;
 }
 
+/* Fine-print disclaimers (responsible gaming, reward-offer terms) */
+footer .footer-disclaimer {
+  margin: 12px 0 0;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
 footer .footer-legal {
   display: flex;
   flex-wrap: wrap;

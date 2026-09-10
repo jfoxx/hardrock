@@ -181,6 +181,18 @@ export default async function decorate(block) {
     lower.append(legalList);
   }
 
+  // Any remaining paragraphs after the legal list (e.g. responsible-gaming /
+  // reward-offer disclaimers) are fine print. Append them below the legal band.
+  const legalIdx = legalList ? nodes.indexOf(legalList) : -1;
+  if (legalIdx !== -1) {
+    nodes.slice(legalIdx + 1).forEach((n) => {
+      if (n.tagName === 'P') {
+        n.classList.add('footer-disclaimer');
+        lower.append(n);
+      }
+    });
+  }
+
   const footer = document.createElement('div');
   footer.className = 'footer-inner';
   footer.append(upper, lower);

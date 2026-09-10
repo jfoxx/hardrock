@@ -1,0 +1,39 @@
+{
+  "variantName": "hero",
+  "baseBlock": "hero",
+  "variantModifiers": ["max", "band"],
+  "version": "1.1.0",
+  "created": "2026-08-31T19:49:04.484Z",
+  "sourceContext": {
+    "originUrl": "https://www.hrhcbiloxi.com/",
+    "originPage": "Biloxi homepage 'Endless Excitement' casino band",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "band",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "background image + heading + paragraph + CTA overlaid",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "notes": "Styling-only hero block (no hero.js). Modifier 'max' = tall full-viewport hero. Modifier 'band' (hero (band)) = single full-bleed photo band with a bottom-left overlaid caption+CTA and gradient scrim (added for Biloxi fullWidthCTAGrid2Widget).",
+    "suitableFor": [
+      "single full-bleed promo bands with overlaid text",
+      "page-top image banners"
+    ],
+    "notSuitableFor": [
+      "multi-slide slideshows (use carousel (hero))",
+      "side-by-side image+text promos (use columns)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-08T00:00:00.000Z"
+  }
+}

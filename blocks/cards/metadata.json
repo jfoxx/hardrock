@@ -1,0 +1,39 @@
+{
+  "variantName": "cards",
+  "baseBlock": "cards",
+  "variantModifiers": ["feature", "overlay"],
+  "version": "1.1.0",
+  "created": "2026-08-31T19:49:04.484Z",
+  "sourceContext": {
+    "originUrl": "https://hotel.hardrock.com/daytona-beach/",
+    "originPage": "homepage resort/rooms cards",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "feature",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + description + CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "notes": "Base cards block. Default = stacked cards (photo on top). Modifier 'feature' (cards (feature)) = single side-by-side image+text feature card. Modifier 'overlay' (cards (overlay)) = 3-up tiles with the caption+CTA overlaid on the photo (added for Biloxi hardrockFeatureListHOverlayWidget). Same cards.js decoration for all; modifiers are pure CSS.",
+    "suitableFor": [
+      "resort/amenity feature grids",
+      "explore/things-to-do cards",
+      "promo tiles with overlaid captions (overlay)"
+    ],
+    "notSuitableFor": [
+      "date/time event cards (use cards-event)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/daytona-beach/index", "/index"],
+    "reuseCount": 2,
+    "lastUsed": "2026-09-08T00:00:00.000Z"
+  }
+}

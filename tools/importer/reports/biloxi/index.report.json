@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://www.hrhcbiloxi.com/",
+  "path": "biloxi/index",
+  "timestamp": "2026-09-08T21:30:46.545Z",
+  "title": "Hard Rock Hotel and Casino Biloxi | Resort Casinos in Biloxi, MS",
+  "template": "biloxi",
+  "blocks": [
+    "carousel-hero",
+    "columns-intro",
+    "cards-overlay",
+    "hero-band",
+    "cards-explore",
+    "embed-video",
+    "cards-event"
+  ]
+}
