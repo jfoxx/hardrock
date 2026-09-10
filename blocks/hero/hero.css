@@ -41,3 +41,64 @@
 
 
 }
+
+/* ---------------------------------------------------------------------------
+   Band variant: hero (band)
+   Single full-bleed photo band with a script eyebrow + heading, a paragraph
+   and a CTA overlaid over a dark scrim at the bottom-left. Used for the Biloxi
+   "Endless Excitement" casino band (source: fullWidthCTAGrid2Widget).
+   Source-only: no daytona equivalent (carousel-hero is multi-slide; columns
+   -promo is side-by-side rather than overlaid). Styling-only, no hero.js.
+   --------------------------------------------------------------------------- */
+
+.hero.band {
+  display: flex;
+  align-items: flex-end;
+  min-height: 420px;
+  padding: 0;
+}
+
+.hero.band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 10%) 60%, rgb(0 0 0 / 0%) 100%);
+}
+
+.hero.band > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  color: var(--background-color, #fff);
+}
+
+.hero.band h1,
+.hero.band h2,
+.hero.band h3,
+.hero.band p {
+  color: var(--background-color, #fff);
+}
+
+.hero.band h1 em,
+.hero.band h2 em,
+.hero.band h3 em {
+  display: block;
+  font-family: var(--script-font-family, cursive);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.hero.band .button-container {
+  margin-top: 20px;
+}
+
+@media (width >= 900px) {
+  .hero.band {
+    min-height: 520px;
+  }
+
+  .hero.band > div {
+    padding: 60px 32px;
+  }
+}

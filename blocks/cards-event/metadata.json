@@ -32,9 +32,10 @@
   },
   "usage": {
     "pagesUsing": [
-      "/daytona-beach/index"
+      "/daytona-beach/index",
+      "/index"
     ],
-    "reuseCount": 1,
-    "lastUsed": "2026-08-31T19:49:04.484Z"
+    "reuseCount": 2,
+    "lastUsed": "2026-09-08T00:00:00.000Z"
   }
 }

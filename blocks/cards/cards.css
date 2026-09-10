@@ -115,3 +115,51 @@
     aspect-ratio: auto;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Overlay variant: cards (overlay)
+   3-up promo tiles where the caption (script eyebrow + heading) and CTA are
+   overlaid on the bottom of the photo with a dark gradient scrim. Used for the
+   Biloxi "Rooms & Suites / Special Offers / Entertainment" feature tiles
+   (source: hardrockFeatureListHOverlayWidget). Uses the default cards.js
+   decoration (image cell + body cell); the overlay is pure CSS.
+   Source-only: no daytona equivalent (cards default stacks body below photo).
+   --------------------------------------------------------------------------- */
+
+.cards.overlay > ul {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cards.overlay > ul > li {
+  position: relative;
+  flex-direction: column;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.cards.overlay .cards-card-image img {
+  aspect-ratio: 3 / 4;
+}
+
+.cards.overlay .cards-card-body {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 24px;
+  background: linear-gradient(to top, rgb(0 0 0 / 80%) 0%, rgb(0 0 0 / 0%) 100%);
+}
+
+.cards.overlay .cards-card-body h3,
+.cards.overlay .cards-card-body p {
+  color: var(--background-color, #fff);
+}
+
+.cards.overlay .cards-card-body p.button-container {
+  margin: 16px 0 0;
+}
+
+@media (width >= 700px) {
+  .cards.overlay > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
